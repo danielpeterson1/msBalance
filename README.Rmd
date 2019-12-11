@@ -12,9 +12,13 @@ knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 
 ## Overview
 
-msBalance is a an R package for analysis of balance responses in people with and without multiple sclerosis (MS)
+msBalance is a an R package for analysis of balance responses in people with and without multiple sclerosis (MS).
+The source data were created by Jessie Huisinga, Ph.D., and collected by Daniel Peterson, Ph.D.
+The analysis code was primarily developed by J. LUcas McKay, Ph.D., M.S.C.R.
 
-## Downloading from GitHub for development
+## Getting msBalance
+
+### Downloading from GitHub for development
 
 To work on the package for others to use:
 
@@ -26,7 +30,7 @@ To work on the package for others to use:
 1. Edit
 1. Stage changed files, commit, and push changes with the git panel.
 
-## Installing from GitHub for use
+### Installing from GitHub for use
 
 Currently msBalance is available on github.
 It is being developed to meet CRAN requirements but is not available there at present.
@@ -36,3 +40,15 @@ To use the package yourself:
 1. Call `remove.packages("msBalance")` if you have installed the package previously.
 1. `devtools::install_github("jlucasmckay/msBalance", build_vignettes = TRUE)`
 1. `browseVignettes("msBalance")`
+
+## Using msBalance
+
+The best way to get started is by using the `msBalance` vignette.
+
+
+
+
+
+
+
+
