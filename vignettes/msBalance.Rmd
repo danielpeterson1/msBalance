@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 
 ```{r}
 library(R.matlab)
+7+3
 ```
 
 
