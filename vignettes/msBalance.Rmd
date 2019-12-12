@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 ## Load the Matlab source files from the remote host
 
 ```{r}
+data = downloadRemoteData()
 library(R.matlab)
 7+3
 ```
