@@ -20,12 +20,20 @@ The analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
 
 ### Downloading from GitHub for development
 
-To download, develop, and install:
-
 1. Be sure to have `devtools` installed.
-1. Use RStudio to create a local copy in `~/tmp` based on https://github.com/jlucasmckay/MSbalance
+1. Use RStudio to create a local copy in `~/tmp` based on https://github.com/jlucasmckay/msBalance
+    1. In RStudio, start a new Project: `File > New Project > Version Control > Git`
+    1. In the “repository URL” paste: https://github.com/jlucasmckay/msBalance
+    1. On OS X, make under `tmp`
+    1. Click “Create Project” to create a new directory, which will be:
+        * A directory/folder under `tmp`
+        * A Git repository, linked to the remote GitHub repository
+        * An RStudio Project
+    1. If there are files that need to be added to the remote, they can be placed in this folder or dragged / dropped into the GitHub interface.
 1. Edit vignettes/msBalance.Rmd and R files in R/.
 1. Stage changed files, commit, and push changes with the git panel.
+
+### Installing from GitHub for use
 1. `devtools::install_github("jlucasmckay/msBalance", build_vignettes = TRUE)`
 1. `vignette("msBalance")`
 
