@@ -20,29 +20,13 @@ The analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
 
 ### Downloading from GitHub for development
 
-To download and develop:
+To download, develop, and install:
 
 1. Be sure to have `devtools` installed.
 1. Use RStudio to create a local copy in `~/tmp` based on https://github.com/jlucasmckay/MSbalance
-1. `devtools::check()`
-1. `devtools::build_vignettes()`
-1. `vignette("msBalance")`
 1. Edit vignettes/msBalance.Rmd and R files in R/.
 1. Stage changed files, commit, and push changes with the git panel.
-
-### To install just for use:
-
-Currently msBalance is available on github.
-It is being developed to meet CRAN requirements but is not available there at present.
-To use the package yourself:
-
-1. Be sure to have `devtools` installed.
-1. Call `remove.packages("msBalance")` if you have installed the package previously.
 1. `devtools::install_github("jlucasmckay/msBalance", build_vignettes = TRUE)`
 1. `vignette("msBalance")`
-
-
-
-
 
 
