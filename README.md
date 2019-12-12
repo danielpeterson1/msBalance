@@ -32,6 +32,17 @@ analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
 3.  Edit vignettes/msBalance.Rmd and R files in R/.
 4.  Stage changed files, commit, and push changes with the git panel.
 
+### Navigating a mixture of Matlab and R code
+
+The source files are in .mat format, using structures like tables and
+other things that cannot be encoded in the earlier V4-6 .mat file types
+that can be easily read by R. There is a mixture of matlab preprocessing
+code (files in `m/`) into .csv files that R can then read (files in
+`R/`). A directory `csv/` is created to hold these files. The contents
+of this directory are ignored by git so that these files are not
+automatically loaded to GitHub, for security purposes. File path
+locations need to be
+
 ### Installing from GitHub for use
 
 1.  `devtools::install_github("jlucasmckay/msBalance", build_vignettes =
