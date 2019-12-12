@@ -14,11 +14,23 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Load the Matlab source files from the remote host
+## Locate the Matlab source files.
+Locate the source data files on your computer.
+These are intended to be kept in 
+This will need to be modified.
 
 ```{r}
-library(R.matlab)
+suppressMessages(library(R.matlab))
+
+path = "~/OneDrive - Emory University/2019 Peterson MS EMG/data"
+(filePathMS = file.path(path, "AllConsolidatedData_MS.mat"))
+(filePathCS = file.path(path, "AllConsolidatedData_CS.mat"))
+
+dataMS = read.mat(filePathMS)
+dataCS = read.mat(filePathCS)
 ```
+
+
 
 
 
