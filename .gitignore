@@ -4,6 +4,5 @@
 .Rhistory
 .RData
 .Ruserdata
-doc
-Meta
-/csv/*.csv
+*.csv
+*.html
