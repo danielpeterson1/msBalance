@@ -1,5 +1,5 @@
 ---
-title: "msBalance"
+title: "Balance responses in MS"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{msBalance}
@@ -9,15 +9,20 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  echo = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
-## Locate the Matlab source files.
-
 ```{r}
+source("../paths.txt")
 ```
+
+## Locate sources
+Reading source files from `r dataDir`
+
+## Run Matlab code to load data
 
 
 

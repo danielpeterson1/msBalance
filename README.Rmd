@@ -30,14 +30,14 @@ The analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
         * A Git repository, linked to the remote GitHub repository
         * An RStudio Project
     1. If there are files that need to be added to the remote, they can be placed in this folder or dragged / dropped into the GitHub interface.
-1. Edit msBalance.Rmd and R files in R/.
+1. Path locations (used by R and Matlab code) are in paths.txt
+1. The main analysis is in R/msBalance.Rmd
 1. Stage changed files, commit, and push changes with the git panel.
 
 ### Navigating a mixture of Matlab and R code
 
-The source files are in .mat format, using structures like tables and other things that cannot be encoded in the earlier V4-6 .mat file types that can be easily read by R.
-There is a mixture of matlab preprocessing code (files in `m/`) into .csv files that R can then read (files in `R/`).
-A directory `csv/` is created to hold these files.
-The contents of this directory are ignored by git so that these files are not automatically loaded to GitHub, for security purposes.
-File path locations need to be manually changed in R/paths.R
+The source files are in .mat format.
+There is a mixture of matlab preprocessing code (files in m/) into .csv files that R can then read (files in R/).
+A directory csv/ is created to hold these files.
+The contents of this directory are ignored by git so that these files are not automatically loaded to GitHub.
 
