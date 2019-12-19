@@ -25,7 +25,7 @@ The analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
     1. In the “repository URL” paste: https://github.com/jlucasmckay/msBalance
     1. On OS X, you can make this under `tmp` - this is a temporary file that can be deleted later
     1. If there are files that need to be added to the remote, they can be placed in this folder or dragged / dropped into the GitHub interface.
-1. Path locations (used by Matlab code) are in `msBalance/paths.m`
+1. Path locations might need to be modified in `msBalance/m/loadData.m`
 1. The main analysis is in `msBalance/R/msBalance.Rmd`
 1. Stage changed files, commit, and push changes with the git panel.
 

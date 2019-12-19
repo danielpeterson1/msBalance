@@ -24,7 +24,7 @@ analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
     4.  If there are files that need to be added to the remote, they can
         be placed in this folder or dragged / dropped into the GitHub
         interface.
-2.  Path locations (used by Matlab code) are in `msBalance/paths.m`
+2.  Path locations might need to be modified in `msBalance/m/loadData.m`
 3.  The main analysis is in `msBalance/R/msBalance.Rmd`
 4.  Stage changed files, commit, and push changes with the git panel.
 
