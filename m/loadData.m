@@ -7,10 +7,10 @@
 clear
 
 % specify data directory
-dataDirectory = "/Users/lucasmckay/OneDrive - Emory University/2019 Peterson MS EMG/data/"
+run(".."+filesep+"paths.m")
 
 % specify csv file directory
-csvDirectory = "../csv/"
+csvDirectory = ".."+filesep+"csv"+filesep
 
 % load data for CS and MS subjects, which are organized as tables
 load(dataDirectory + "AllConsolidatedData_CS.mat")
@@ -25,7 +25,7 @@ timeVars = vars.name(vars.class == "time")
 
 % pipe the patient-level-data to two csv files that can be combined in R
 writetable(m(:,ismember(m.Properties.VariableNames,idVars)), csvDirectory + "m.csv")
-writetable(c(:,ismember(c.Properties.VariableNames,idVars)), csvDirectory + "m.csv")
+writetable(c(:,ismember(c.Properties.VariableNames,idVars)), csvDirectory + "c.csv")
 
 % free up memory
 clear
