@@ -6,8 +6,8 @@
 % free up memory
 clear
 
-% specify data directory
-dataDirectory = "/Users/lucasmckay/OneDrive - Emory University/2019 Peterson MS EMG/data/"
+% specify data directory - 
+run("../paths.m")
 
 % load data for CS and MS subjects, which are organized as tables
 load(dataDirectory + "AllConsolidatedData_CS.mat")

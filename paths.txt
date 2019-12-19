@@ -1,1 +1,0 @@
-dataDir = "/Users/lucasmckay/OneDrive - Emory University/2019 Peterson MS EMG/matlab/"
