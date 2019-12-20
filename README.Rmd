@@ -36,3 +36,11 @@ The analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
 1. There is a mixture of matlab preprocessing code (files in `m/`) into `.csv` files that R can then read (files in `R/`).
 1. A directory `csv/` is created to hold these files. The contents of this directory are not automatically loaded to GitHub.
 
+### Running the code
+
+1. Alter `paths.m` to point to the correct data directory.
+1. Run the Matlab code to load .mat files and populate patient-level data
+    * Run `m/loadData.m` to load source files and populate the `csv/` directory.
+    * A future version of this could call the Matlab script from R if useful.
+1. "knit" `R/msBalance.Rmd` to produce the study document.
+

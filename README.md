@@ -24,9 +24,12 @@ analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
     4.  If there are files that need to be added to the remote, they can
         be placed in this folder or dragged / dropped into the GitHub
         interface.
-2.  Path locations might need to be modified in `msBalance/m/loadData.m`
-3.  The main analysis is in `msBalance/R/msBalance.Rmd`
-4.  Stage changed files, commit, and push changes with the git panel.
+2.  Path locations that need to be read by Matlab and R can be specified
+    in `msBalance/paths.m`.
+3.  Path locations might need to be modified in
+    `msBalance/m/loadData.m`.
+4.  The main analysis is in `msBalance/R/msBalance.Rmd`
+5.  Stage changed files, commit, and push changes with the git panel.
 
 ### Navigating a mixture of Matlab and R code
 
@@ -35,3 +38,13 @@ analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
     `.csv` files that R can then read (files in `R/`).
 3.  A directory `csv/` is created to hold these files. The contents of
     this directory are not automatically loaded to GitHub.
+
+### Running the code
+
+1.  Alter `paths.m` to point to the correct data directory.
+2.  Run the Matlab code to load .mat files and populate patient-level
+    data
+      - Run `m/loadData.m` to load source files.
+      - A future version of this could call the Matlab script from R if
+        useful.
+3.  “knit” `R/msBalance.Rmd` to produce the study document.
