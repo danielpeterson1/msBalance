@@ -29,8 +29,8 @@ analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
       - Run `m/loadData.m` to load source files and populate the `csv/`
         directory. On Dr. McKay’s machine, this can be run as
         `/Applications/MATLAB_R2019a.app/bin/matlab -nojvm -nodesktop
-        -nosplash -r "loadData; exit"` from the command line once the
-        shell is in the correct directory.
+        -nosplash -r "cd m; loadData; exit"` from the command line once
+        the shell is in the correct directory.
       - A future version of this could call the Matlab script from R if
         useful.
 3.  “knit” `R/msBalance.Rmd` to produce
