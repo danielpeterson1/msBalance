@@ -18,7 +18,13 @@ knitr::opts_chunk$set(
 ```
 
 ```{r}
+# set path variables
 source("../paths.m")
+
+# if csv files do not exist, run matlab batch steps
+if (!file.exists("../csv/c.csv")|!file.exists("../csv/m.csv")){
+  system(paste(matlabCommand, "'cd ../m; loadData; exit'"))
+}
 ```
 
 # Introduction

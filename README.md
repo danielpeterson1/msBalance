@@ -23,18 +23,15 @@ analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
 ### How to run the code
 
 1.  Alter `paths.m` in the main project directory to point to the
-    correct data directory on your local machine.
-2.  Run the Matlab code to load .mat files and populate patient-level
-    data
-      - Run `m/loadData.m` to load source files and populate the `csv/`
-        directory. On Dr. McKay’s machine, this can be run as
-        `/Applications/MATLAB_R2019a.app/bin/matlab -nojvm -nodesktop
-        -nosplash -r "cd m; loadData; exit"` from the command line once
-        the shell is in the correct directory.
-      - A future version of this could call the Matlab script from R if
-        useful.
-3.  “knit” `R/msBalance.Rmd` to produce
-`R/msBalance.html`.
+    correct data directory on your local machine. This should contain
+    the files `AllConsolidatedData_CS.mat` and
+    `AllConsolidatedData_MS.mat`
+2.  Also modify the `matlabCommand` string in paths.m. On Dr. McKay’s
+    machine, this string is `/Applications/MATLAB_R2019a.app/bin/matlab
+    -nojvm -nodesktop -nosplash -r`
+3.  “knit” `R/msBalance.Rmd` to produce `R/msBalance.html`. This will
+    call matlab to create intermediary files if they are
+missing.
 
 ### Notes related to the fact that there is a mixture of Matlab and R code
 
