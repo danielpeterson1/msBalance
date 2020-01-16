@@ -32,9 +32,13 @@ This document describes the analysis of standing balance responses in people wit
 MS has profound effects on balance,[@vanliew2019] including altering protective stepping behaviors.[@peterson2016]
 The main objective of this study was to examine the impact of MS on the pattern of magnitude and timing of muscle activation during feet-in-place balance responses.
 
-# Methods and Results
+# Methods
 
 ## Data sources
+
+This study performed a secondary analysis on existing electromyographic recordings during balance responses in people with and without MS.
+Clinical and demographic characteristics of the study sample are summarized in Table 1.
+
 ```{r, message=FALSE, warning=FALSE}
 library(vroom)
 library(dplyr)
@@ -65,7 +69,16 @@ followUp = participants %>% select(Group, Participant, `Time Since Enrollment (D
 
 ```
 
-This study performed a secondary analysis on existing electromyographic recordings during balance responses in people with and without MS.
+## Assessment protocol
+Complete details of the assessment protocol are avaialble in an earlier report.[@huisinga2014] 
+Briefly, subjects stood on a set of 2 custom hydraulic force platforms that translated forward together causing backward body sway and the activation of tibialis anterior (TA).
+subjects stood with arms folded across the chest, eyes open, with their feet at a fixed heel-to-heel distance of 10cm.
+Peak platform displacement was 4 cm, at a rate of 15 cm/s, which elicited feet-in-place balance corrections without stepping.
+Surface electromyography was recorded from the right TA of all subjects with two 2.5-cm^2^ surface electrodes placed approximately 2 cm apart, with a ground electrode on the lateral condyle. 
+
+## Data processing
+Each individual EMG record was registered to the onset of platform motion and resampled.
+
 Individual subjects were as follows:
 
 ```{r, warning=FALSE, message=FALSE}
