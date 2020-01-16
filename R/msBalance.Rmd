@@ -37,7 +37,10 @@ The main objective of this study was to examine the impact of MS on the pattern 
 ## Data sources
 
 This study performed a secondary analysis on existing electromyographic recordings during balance responses in people with and without MS.
+Inclusion criteria for MS participants were as follows: diagnosis of MS by a MS neurologist and no relapses within 60 days.
+Inclusion criteria for all participants included ability to walk 25 ft (7.6 m) without an assistive device, and no other known biomechanical or neurologic conditions affecting stepping or balance.
 Clinical and demographic characteristics of the study sample are summarized in Table 1.
+
 
 ```{r, message=FALSE, warning=FALSE}
 library(vroom)
@@ -71,10 +74,15 @@ followUp = participants %>% select(Group, Participant, `Time Since Enrollment (D
 
 ## Assessment protocol
 Complete details of the assessment protocol are avaialble in an earlier report.[@huisinga2014] 
-Briefly, subjects stood on a set of 2 custom hydraulic force platforms that translated forward together causing backward body sway and the activation of tibialis anterior (TA).
-subjects stood with arms folded across the chest, eyes open, with their feet at a fixed heel-to-heel distance of 10cm.
+Briefly, subjects stood on a set of 2 custom hydraulic force platforms that translated either forward or backward (Figure 1). Forward perturbations caused backward body sway and the activation of tibialis anterior (TA), and backward perturbations caused forward body sway, and the activation of medial gastrocnemius (MG).
+Subjects stood with arms folded across the chest, eyes open, with their feet at a fixed heel-to-heel distance of 10 cm.
 Peak platform displacement was 4 cm, at a rate of 15 cm/s, which elicited feet-in-place balance corrections without stepping.
 Surface electromyography was recorded from the right TA of all subjects with two 2.5-cm^2^ surface electrodes placed approximately 2 cm apart, with a ground electrode on the lateral condyle. 
+
+```{r perturbationFigure, out.width = "25%", fig.cap = "Figure 1. Perturbation directions used in testing protocol.", fig.align="center"}
+knitr::include_graphics("figures/Perturbations.svg")
+```
+
 
 ## Data processing
 Each individual EMG record was registered to the onset of platform motion and resampled.
@@ -85,14 +93,14 @@ Characteristics of the remaining participants included in analyses are summarize
 
 ## Demographic and Clinical Characteristics
 
-# Disclosures
-
-## Funding sources and conflict of interest
+***
+### Funding sources and conflict of interest
 This study was supported in part by National Institutes of Health grant K25HD086276.
 The authors report no conflict of interest related to this study.
 
-## Financial disclosures for the previous 12 months
+### Financial disclosures for the previous 12 months
 Dr. McKay has received research funding or support from the National Institutes of Health. Dr. McKay has received consulting fees from BioCircuit Technologies.
 
+***
 # References
 
