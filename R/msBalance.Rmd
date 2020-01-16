@@ -79,35 +79,6 @@ Surface electromyography was recorded from the right TA of all subjects with two
 ## Data processing
 Each individual EMG record was registered to the onset of platform motion and resampled.
 
-Individual subjects were as follows:
-
-```{r, warning=FALSE, message=FALSE}
-library(janitor)
-library(kableExtra)
-median0 = function (x) median(x[x>0], na.rm = TRUE)
-min0 = function (x) min(x[x>0], na.rm = TRUE)
-max0 = function (x) max(x[x>0], na.rm = TRUE)
-
-k = function (x) kable_styling(x, full_width = F, position = "left")
-t = followUp %>% tabyl(Group) %>% adorn_totals("row") %>% adorn_pct_formatting(digits = 0) %>% rename(N = n, `Percent`=percent)
-followUpAvailable = followUp %>% filter(Group=="MS") %>% ungroup() %>% mutate(f = `Follow-Up Available (Days)`>0) %>% summarize(fAvail = sum(f==TRUE,na.rm = TRUE)/n()) %>% pull() %>% scales::percent()
-followUpMed = median0(followUp$`Follow-Up Available (Days)`)
-followUpMin = min0(followUp$`Follow-Up Available (Days)`)
-followUpMax = max0(followUp$`Follow-Up Available (Days)`)
-kable(t) %>% k()
-```
-
-Of these, follow-up visits were available for several of the participants with MS (≈`r followUpAvailable`).
-Among the participants with MS and follow-up available, the median duration was `r followUpMed` days, and the range was from `r followUpMin` to `r followUpMax` days.
-The number of visits was distributed as follows:
-
-```{r, warning=FALSE, message=FALSE}
-library(janitor)
-library(kableExtra)
-t = followUp %>% tabyl(Group, `Study Visits Available (n)`)
-kable(t) %>% k() %>% add_header_above(c(" " = 1, "Number of Study Visits Available" = 4))
-```
-
 ## Exclusions
 Beginning with N=TK records, TK were excluded (N=TK, MS, N=TK, Control) due to incomplete demographic information.
 Characteristics of the remaining participants included in analyses are summarized in Table 1.
