@@ -12,6 +12,8 @@ csl: nature.csl
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
@@ -35,16 +37,16 @@ The main objective of this study was to examine the impact of MS on the pattern 
 # Methods
 
 ## Data sources
-
 This study performed a secondary analysis on existing electromyographic recordings during balance responses in people with and without MS.
 Inclusion criteria for MS participants were as follows: diagnosis of MS by a MS neurologist and no relapses within 60 days.
 Inclusion criteria for all participants included ability to walk 25 ft (7.6 m) without an assistive device, and no other known biomechanical or neurologic conditions affecting stepping or balance.
 Clinical and demographic characteristics of the study sample are summarized in Table 1.
 
 
-```{r, message=FALSE, warning=FALSE}
+```{r loadData}
 library(vroom)
 library(dplyr)
+library(magrittr)
 library(stringr)
 library(lubridate)
 `%contains%` = function(s, pattern) grepl(pattern, s)
@@ -70,28 +72,48 @@ participants = participants %>% left_join(participants %>% group_by(Participant)
 # calculate amount of follow-up
 followUp = participants %>% select(Group, Participant, `Time Since Enrollment (Days)`) %>% group_by(Group, Participant) %>% summarize(`Study Visits Available (n)` = n(), `Follow-Up Available (Days)` = max(`Time Since Enrollment (Days)`))
 
+# consider only baseline data, and get rid of participants with missing minimal demographic data
+participants %<>% filter(!`Visit ID` %contains% "F") %>% filter(!is.na(Age)) %>% filter(Sex %in% c("M","F")) %>% filter(Age>0)
+
+# add a group condition - note that if_else in dplyr and ifelse in base r are different!
+participants %<>% mutate(Group = if_else(Participant %contains% "MSC", "Control", "MS")) %>%
+  mutate(Group = relevel(factor(Group), "MS")) %>% select(Group, Participant, Age, Sex, everything())
+```
+
+```{r layout}
+library(captioner)
+tableNumbers <- captioner(prefix = "Table")
+captionDemographics = tableNumbers(name = "demographics", caption = "Clinical and demographic features of the study population.")
+figureNumbers <- captioner(prefix = "Figure")
+captionCartoon = figureNumbers(name = "cartoon", caption = "Perturbation directions used in testing protocol.")
 ```
 
 ## Assessment protocol
 Complete details of the assessment protocol are avaialble in an earlier report.[@huisinga2014] 
-Briefly, subjects stood on a set of 2 custom hydraulic force platforms that translated either forward or backward (Figure 1). Forward perturbations caused backward body sway and the activation of tibialis anterior (TA), and backward perturbations caused forward body sway, and the activation of medial gastrocnemius (MG).
+Briefly, subjects stood on a set of 2 custom hydraulic force platforms that translated either forward or backward (`r figureNumbers("cartoon", display = "cite")`).
+In this study, "perturbation direction" refers to the direction of postural sway caused by the surface translation.
+Therefore, a backward perturbation refers to forward movement of the support surface causing backward body sway and the activation of tibialis anterior (TA),
+whereas forward perturbations refer to backward translation of the support surface causing forward body sway and the activation of medial gastrocnemius (MG).
 Subjects stood with arms folded across the chest, eyes open, with their feet at a fixed heel-to-heel distance of 10 cm.
 Peak platform displacement was 4 cm, at a rate of 15 cm/s, which elicited feet-in-place balance corrections without stepping.
 Surface electromyography was recorded from the right TA of all subjects with two 2.5-cm^2^ surface electrodes placed approximately 2 cm apart, with a ground electrode on the lateral condyle. 
 
-```{r perturbationFigure, out.width = "25%", fig.cap = "Figure 1. Perturbation directions used in testing protocol.", fig.align="center"}
+```{r perturbationFigure, out.width = "25%", fig.align = "center", fig.cap = captionCartoon}
 knitr::include_graphics("figures/Perturbations.svg")
 ```
-
 
 ## Data processing
 Each individual EMG record was registered to the onset of platform motion and resampled.
 
-## Exclusions
-Beginning with N=TK records, TK were excluded (N=TK, MS, N=TK, Control) due to incomplete demographic information.
-Characteristics of the remaining participants included in analyses are summarized in Table 1.
+## Demographic and clinical characteristics
+Demographic and clinical characteristics of the study population are summarized in `r tableNumbers("demographics", display = "cite")`.
 
-## Demographic and Clinical Characteristics
+```{r table1}
+library(janitor)
+library(kableExtra)
+participants %>% tabyl(Sex, Group) %>% mutate(Total = MS + Control) %>% 
+  kable() %>% kable_styling(full_width = F, position = "left")
+```
 
 ***
 ### Funding sources and conflict of interest
