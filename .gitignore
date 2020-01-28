@@ -1,9 +1,17 @@
+# R files #
+###########
 .RBuildignore
-.DS_Store
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+# System files #
+################
+.DS_Store
+*.m~
+# Output files #
+################
 *.html
 *.csv
-*.m~
+# Temporary directory #
+#######################
