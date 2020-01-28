@@ -20,9 +20,12 @@ load(dataDirectory + "AllConsolidatedData_MS.mat")
 m = T;
 clear T
 
+% set default sample frequency
+fs = 1000;
+
 % interpolate data to common timebase
-[m2, ~] = interpolateRawData(m);
-[c2, Time] = interpolateRawData(c);
+[m2, ~] = interpolateRawData(m, fs);
+[c2, Time] = interpolateRawData(c, fs);
 
 % concatenate data into common table
 d = [m2; c2];
@@ -32,22 +35,26 @@ d = [m2; c2];
 d(d.DataError,:) = [];
 d.DataError = [];
 
-% explode variables
+% explode variables and pre-Process
 Participant = d.Participant;
-Date = d.Date;
+Date = datestr(d.Date,'yyyy-mm-dd');
 Trial = d.Trial;
-Emg1 = d.e1;
-Emg2 = d.e2;
-Emg3 = d.e3;
-Emg4 = d.e4;
-Treadmill = d.p;
-
-% filter EMG
-
-% normalize EMG
+Emg1 = preprocessEmg(d.e1, fs);
+Emg2 = preprocessEmg(d.e2, fs);
+Emg3 = preprocessEmg(d.e3, fs);
+Emg4 = preprocessEmg(d.e4, fs);
+Treadmill = preprocessTreadmill(d.p);
 
 % save into temporary directory
-writematrix(Treadmill, tmpDir + "Treadmill.csv")
+writematrix(Participant, tmpDir + "Participant.csv");
+writematrix(Date, tmpDir + "Date.csv");
+writematrix(Trial, tmpDir + "Trial.csv");
+writematrix(Time, tmpDir + "Time.csv");
+writematrix(Treadmill, tmpDir + "Treadmill.csv");
+writematrix(Emg1, tmpDir + "Emg1.csv");
+writematrix(Emg2, tmpDir + "Emg2.csv");
+writematrix(Emg3, tmpDir + "Emg3.csv");
+writematrix(Emg4, tmpDir + "Emg4.csv");
 
 % wavelet transform
 

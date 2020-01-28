@@ -112,15 +112,35 @@ knitr::include_graphics("figures/Perturbations.svg")
 ```
 
 ## Data processing
-Each individual EMG record was registered to the onset of treadmill motion and resampled to a common timebase.
+Each individual EMG record was registered to the onset of treadmill motion and resampled to a common sample rate (1 kHz), and processed (high-pass, 35 Hz, de- mean, rectify, low-pass, 40 Hz) as in previous studies.[@lang2019; @mckay2016]
 
 ```{r}
 # if trial-level data files do not exist, run matlab batch steps to populate them
-if (!file.exists("../tmp/Treadmill.csv")){
+if (!file.exists("../tmp/Participant.csv")|
+    !file.exists("../tmp/Date.csv")|
+    !file.exists("../tmp/Trial.csv")|
+    !file.exists("../tmp/Time.csv")|
+    !file.exists("../tmp/Treadmill.csv")|
+    !file.exists("../tmp/Emg1.csv")|
+    !file.exists("../tmp/Emg2.csv")|
+    !file.exists("../tmp/Emg3.csv")|
+    !file.exists("../tmp/Emg4.csv")){
   system(paste(matlabCommand, "'cd ../m; preprocessData; exit'"))
 }
-```
+trialData = cbind(
+vroom("../tmp/Participant.csv", col_names = FALSE) %>% select(Participant = X1),
+vroom("../tmp/Date.csv", col_names = FALSE) %>% select(Date = X1),
+vroom("../tmp/Trial.csv", col_names = FALSE) %>% select(Trial = X1)
+) %>% as_tibble() %>% mutate(Date = ymd(Date))
 
+time = vroom("../tmp/Time.csv", col_names = FALSE)
+treadmill = vroom("../tmp/Treadmill.csv", col_names = FALSE)
+emg1 = vroom("../tmp/Emg1.csv", col_names = FALSE)
+emg2 = vroom("../tmp/Emg2.csv", col_names = FALSE)
+emg3 = vroom("../tmp/Emg3.csv", col_names = FALSE)
+emg4 = vroom("../tmp/Emg4.csv", col_names = FALSE)
+
+```
 
 ## Demographic and clinical characteristics
 Demographic and clinical characteristics of the study population are summarized in `r tableNumbers("demographics", display = "cite")`.
