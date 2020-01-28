@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 # set path variables
 source("../paths.m")
 
-# if csv files do not exist, run matlab batch steps
+# if csv files do not exist, run matlab batch steps to populate them
 if (!file.exists("../csv/c.csv")|!file.exists("../csv/m.csv")){
   system(paste(matlabCommand, "'cd ../m; loadData; exit'"))
 }
@@ -112,7 +112,7 @@ knitr::include_graphics("figures/Perturbations.svg")
 ```
 
 ## Data processing
-Each individual EMG record was registered to the onset of platform motion and resampled.
+Each individual EMG record was registered to the onset of platform motion and resampled to a common timebase
 
 ## Demographic and clinical characteristics
 Demographic and clinical characteristics of the study population are summarized in `r tableNumbers("demographics", display = "cite")`.
