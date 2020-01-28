@@ -8,10 +8,10 @@ clear
 close all
 
 % specify data directory
-run(".."+filesep+"paths.m")
+run(".." + filesep + "paths.m")
 
 % specify temporary directory
-tmpDir = ".."+filesep+"tmp"+filesep
+tmpDir = ".." + filesep + "tmp" + filesep
 
 % load data for CS and MS subjects, which are organized as tables
 load(dataDirectory + "AllConsolidatedData_CS.mat")
@@ -47,24 +47,10 @@ Treadmill = d.p;
 % normalize EMG
 
 % save into temporary directory
-writematrix(Treadmill, tmpDir+"Treadmill.csv")
-7+3
+writematrix(Treadmill, tmpDir + "Treadmill.csv")
 
 % wavelet transform
 
 % do statistics
 
 % inverse transform
-
-
-% load data dictionary
-vars = readtable(dataDirectory + "dataDictionary.csv")
-idVars = vars.name(vars.class == "id" | vars.class == "dem")
-timeVars = vars.name(vars.class == "time")
-
-% pipe the patient-level-data to two csv files that can be combined in R
-writetable(m(:,ismember(m.Properties.VariableNames,idVars)), csvDirectory + "m.csv")
-writetable(c(:,ismember(c.Properties.VariableNames,idVars)), csvDirectory + "c.csv")
-
-% free up memory
-clear

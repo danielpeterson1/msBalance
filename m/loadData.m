@@ -26,6 +26,3 @@ timeVars = vars.name(vars.class == "time")
 % pipe the patient-level-data to two csv files that can be combined in R
 writetable(m(:,ismember(m.Properties.VariableNames,idVars)), csvDirectory + "m.csv")
 writetable(c(:,ismember(c.Properties.VariableNames,idVars)), csvDirectory + "c.csv")
-
-% free up memory
-clear

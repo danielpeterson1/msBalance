@@ -112,7 +112,15 @@ knitr::include_graphics("figures/Perturbations.svg")
 ```
 
 ## Data processing
-Each individual EMG record was registered to the onset of platform motion and resampled to a common timebase
+Each individual EMG record was registered to the onset of treadmill motion and resampled to a common timebase.
+
+```{r}
+# if trial-level data files do not exist, run matlab batch steps to populate them
+if (!file.exists("../tmp/Treadmill.csv")){
+  system(paste(matlabCommand, "'cd ../m; preprocessData; exit'"))
+}
+```
+
 
 ## Demographic and clinical characteristics
 Demographic and clinical characteristics of the study population are summarized in `r tableNumbers("demographics", display = "cite")`.
