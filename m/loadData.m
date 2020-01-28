@@ -7,10 +7,10 @@
 clear
 
 % specify data directory
-run(".."+filesep+"paths.m")
+run(".." + filesep + "paths.m")
 
-% specify csv file directory
-csvDirectory = ".."+filesep+"csv"+filesep
+% specify temporary directory
+csvDirectory = ".." + filesep + "tmp" + filesep
 
 % load data for CS and MS subjects, which are organized as tables
 load(dataDirectory + "AllConsolidatedData_CS.mat")

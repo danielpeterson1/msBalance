@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 source("../paths.m")
 
 # if csv files do not exist, run matlab batch steps to populate them
-if (!file.exists("../csv/c.csv")|!file.exists("../csv/m.csv")){
+if (!file.exists("../csv/c.csv")|!file.exists("../tmp/m.csv")){
   system(paste(matlabCommand, "'cd ../m; loadData; exit'"))
 }
 ```
@@ -47,8 +47,8 @@ library(lubridate)
 `%omits%` = function(s, pattern) !grepl(pattern, s)
 
 # load participant-level information
-m = vroom("../csv/m.csv") %>% mutate(Group = "MS") %>% mutate(Age = round(age)) %>% mutate(Sex = toupper(gender)) %>% rename(Participant = Subj)
-c = vroom("../csv/c.csv") %>% mutate(Group = "Control") %>% mutate(Age = round(age)) %>% mutate(Sex = toupper(gender)) %>% rename(Participant = Subj)
+m = vroom("../tmp/m.csv") %>% mutate(Group = "MS") %>% mutate(Age = round(age)) %>% mutate(Sex = toupper(gender)) %>% rename(Participant = Subj)
+c = vroom("../tmp/c.csv") %>% mutate(Group = "Control") %>% mutate(Age = round(age)) %>% mutate(Sex = toupper(gender)) %>% rename(Participant = Subj)
 
 # concatenate the participants. note that some of them appear to be coded as follow-ups. this is very useful, but may not be needed for the first report. they appear to be coded as such by the presence of "F1", "F2" in the participant name. convert this to a visit number (1, 2, 3, 4)
 participants = full_join( m %>% select(-trial, -age, -gender) %>% distinct(), c %>% select(-trial, -age, -gender) %>% distinct() ) %>%
