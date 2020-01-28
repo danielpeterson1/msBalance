@@ -1,7 +1,7 @@
 Balance responses in MS
 ================
 J.L. McKay
-16 January 2020
+28 January 2020
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
