@@ -10,6 +10,9 @@ close all
 % specify data directory
 run(".."+filesep+"paths.m")
 
+% specify temporary directory
+tmpDir = ".."+filesep+"tmp"+filesep
+
 % load data for CS and MS subjects, which are organized as tables
 load(dataDirectory + "AllConsolidatedData_CS.mat")
 c = T;
@@ -39,7 +42,12 @@ Emg3 = d.e3;
 Emg4 = d.e4;
 Treadmill = d.p;
 
+% filter EMG
+
+% normalize EMG
+
 % save into temporary directory
+writematrix(Treadmill, tmpDir+"Treadmill.csv")
 7+3
 
 % wavelet transform
