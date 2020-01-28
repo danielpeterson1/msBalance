@@ -1,4 +1,4 @@
-function out = interpolateRawData(in, fs, ts)
+function [out, ts] = interpolateRawData(in, fs, ts)
 
 % set output frequency to default if not specified
 if nargin<2

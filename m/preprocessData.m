@@ -17,15 +17,30 @@ load(dataDirectory + "AllConsolidatedData_MS.mat")
 m = T;
 clear T
 
-% set a flag for interactive use, making plots, etc.
-interactive = 1;
-
 % interpolate data to common timebase
-m2 = interpolateRawData(m);
-c2 = interpolateRawData(c);
+[m2, ~] = interpolateRawData(m);
+[c2, Time] = interpolateRawData(c);
 
-% concatenate data into common table in RAM
+% concatenate data into common table
 d = [m2; c2];
+
+% during development, there were a small number of trials (4) with loading
+% errors. exclude these.
+d(d.DataError,:) = [];
+d.DataError = [];
+
+% explode variables
+Participant = d.Participant;
+Date = d.Date;
+Trial = d.Trial;
+Emg1 = d.e1;
+Emg2 = d.e2;
+Emg3 = d.e3;
+Emg4 = d.e4;
+Treadmill = d.p;
+
+% save into temporary directory
+7+3
 
 % wavelet transform
 
