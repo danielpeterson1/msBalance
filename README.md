@@ -40,7 +40,7 @@ missing.
 1.  The source files are in `.mat` format.
 2.  There is a mixture of matlab preprocessing code (files in `m/`) into
     `.csv` files that R can then read (files in `R/`).
-3.  A directory `csv/` is created to hold these files. The contents of
+3.  A directory `tmp/` is created to hold these files. The contents of
     this directory are not automatically loaded to GitHub.
 
 ## How to download from GitHub for development
@@ -49,7 +49,7 @@ missing.
     Control > Git`.
 2.  In the “repository URL” paste:
     <https://github.com/jlucasmckay/msBalance>.
-3.  On OS X, you can make this under `tmp` - this is a temporary file
+3.  On OS X, you can make this under `~/tmp` - this is a temporary file
     that can be deleted later.
 4.  If there are files that need to be added to the remote, they can be
     placed in this folder or dragged / dropped into the GitHub

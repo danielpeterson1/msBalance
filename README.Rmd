@@ -34,12 +34,12 @@ The analysis code was primarily developed by J. Lucas McKay, Ph.D., M.S.C.R.
 ## Notes related to the fact that there is a mixture of Matlab and R code
 1. The source files are in `.mat` format.
 1. There is a mixture of matlab preprocessing code (files in `m/`) into `.csv` files that R can then read (files in `R/`).
-1. A directory `csv/` is created to hold these files. The contents of this directory are not automatically loaded to GitHub.
+1. A directory `tmp/` is created to hold these files. The contents of this directory are not automatically loaded to GitHub.
 
 ## How to download from GitHub for development
 1. In RStudio, start a new Project: `File > New Project > Version Control > Git`.
 1. In the “repository URL” paste: https://github.com/jlucasmckay/msBalance.
-1. On OS X, you can make this under `tmp` - this is a temporary file that can be deleted later.
+1. On OS X, you can make this under `~/tmp` - this is a temporary file that can be deleted later.
 1. If there are files that need to be added to the remote, they can be placed in this folder or dragged / dropped into the GitHub interface.
 1. Stage changed files, commit, and push changes with the git panel.
 
