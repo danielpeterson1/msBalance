@@ -6,6 +6,7 @@ for i = 1:size(emg,1)
     out = proc_process_emg(in, fs);
     emgOut(i,:) = out';
 end
+emg = emgOut;
 end
 
 function emg = proc_process_emg(EMG, SampleRate)
@@ -45,9 +46,13 @@ nyquist_frequency = SampleRate/2;
 %%% Filter EMG signals
 % High pass filter at 35 Hz
 emg = filtfilt(filt_high_B, filt_high_A,EMG);
-% Demean and rectify
+
+% de-mean
 emg_mean = repmat(mean(emg(1:SampleRate,:),1),size(emg,1),1);
+
+% rectify
 emg = abs(emg-emg_mean);
+
 % Low pass filter at 40 Hz
 emg = filtfilt(filt_low_B, filt_low_A,emg);
 
