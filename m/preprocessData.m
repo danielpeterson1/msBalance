@@ -8,7 +8,7 @@ clear
 close all
 
 % set flag to run interactive and make plots
-runInteractive = true;
+runInteractive = false;
 
 % specify data directory
 run(".." + filesep + "paths.m")
@@ -64,16 +64,17 @@ if runInteractive
     plot(Time,Emg4)    
 end
 
-% save into temporary directory
+% save into temporary directory. note that timeseries are much easier to
+% work with with time samples going down the rows, so transpose these.
 writematrix(Participant, tmpDir + "Participant.csv");
 writematrix(Date, tmpDir + "Date.csv");
 writematrix(Trial, tmpDir + "Trial.csv");
-writematrix(Time, tmpDir + "Time.csv");
-writematrix(Treadmill, tmpDir + "Treadmill.csv");
-writematrix(Emg1, tmpDir + "Emg1.csv");
-writematrix(Emg2, tmpDir + "Emg2.csv");
-writematrix(Emg3, tmpDir + "Emg3.csv");
-writematrix(Emg4, tmpDir + "Emg4.csv");
+writematrix(Time', tmpDir + "Time.csv");
+writematrix(Treadmill', tmpDir + "Treadmill.csv");
+writematrix(Emg1', tmpDir + "Emg1.csv");
+writematrix(Emg2', tmpDir + "Emg2.csv");
+writematrix(Emg3', tmpDir + "Emg3.csv");
+writematrix(Emg4', tmpDir + "Emg4.csv");
 
 % wavelet transform
 
