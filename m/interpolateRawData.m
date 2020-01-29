@@ -11,7 +11,6 @@ end
 nR = size(in,1);
 nC = length(ts);
 
-
 [e1, e2, e3, e4, p] = deal(nan(nR, nC));
 
 DataError = false(nR, 1);
