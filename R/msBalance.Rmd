@@ -103,9 +103,12 @@ Briefly, subjects stood on a set of 2 custom hydraulic force platforms that tran
 In this study, "perturbation direction" refers to the direction of postural sway caused by the surface translation.
 Therefore, a backward perturbation refers to forward movement of the support surface causing backward body sway and the activation of tibialis anterior (TA),
 whereas forward perturbations refer to backward translation of the support surface causing forward body sway and the activation of medial gastrocnemius (MG).
-Subjects stood with arms folded across the chest, eyes open, with their feet at a fixed heel-to-heel distance of 10 cm.
+
+During each asssessment, subjects stood with arms folded across the chest, eyes open, with their feet at a fixed heel-to-heel distance of 10 cm.
+Six perturbations were delivered, three forward, followed by three backward.
 Peak platform displacement was 4 cm, at a rate of 15 cm/s, which elicited feet-in-place balance corrections without stepping.
-Surface electromyography was recorded from the right TA of all subjects with two 2.5-cm^2^ surface electrodes placed approximately 2 cm apart, with a ground electrode on the lateral condyle. 
+Surface electromyography was recorded with pairs 2.5-cm^2^ surface electrodes placed approximately 2 cm apart, with a ground electrode on the lateral condyle. 
+For this preliminary analysis, we considered only the activity of tibialis anterior of the right leg during forward perturbations.
 
 ```{r perturbationFigure, out.width = "25%", fig.align = "left", fig.cap = captionCartoon}
 knitr::include_graphics("figures/Perturbations.svg")
@@ -139,6 +142,21 @@ emg1 = vroom("../tmp/Emg1.csv", col_names = FALSE)
 emg2 = vroom("../tmp/Emg2.csv", col_names = FALSE)
 emg3 = vroom("../tmp/Emg3.csv", col_names = FALSE)
 emg4 = vroom("../tmp/Emg4.csv", col_names = FALSE)
+
+# the treadmill records are not very useful, as they have not been cleaned up manually, so let's plan to assume Dan's coding of the study conditions.
+# To your questions
+#  
+# 1)      We have bilateral TA and medial Gastroc. Specifically
+# a.       Ch. 1= Rt. TA
+# b.       Ch. 2= Lf. TA
+# c.       Ch. 3= Rt. MG
+# d.       Ch. 4= Lf. MG
+# 2)      We have 6 trials per participant per visit (some people have multiple visits). Within each visit, they complete 6 trials…
+# a.       First 3 are FORWARD steps / loss of balance (i.e. the treadmill belt moves backward underfoot)
+# b.       Next 3 are BACKWARD steps / loss of balance (i.e. the treadmill belt moves forward underfoot)
+
+# the dataset emg1 corresponds to right TA. reconfigure it to enable tidy plotting.
+
 
 ```
 

@@ -7,6 +7,9 @@
 clear
 close all
 
+% set flag to run interactive and make plots
+runInteractive = true;
+
 % specify data directory
 run(".." + filesep + "paths.m")
 
@@ -44,6 +47,22 @@ Emg2 = preprocessEmg(d.e2, fs);
 Emg3 = preprocessEmg(d.e3, fs);
 Emg4 = preprocessEmg(d.e4, fs);
 Treadmill = preprocessTreadmill(d.p);
+
+if runInteractive
+    f = figure;
+    nr = 5;
+    nc = 1;
+    subplot(nr,nc,1)
+    plot(Time,Treadmill)
+    subplot(nr,nc,2)
+    plot(Time,Emg1)    
+    subplot(nr,nc,3)
+    plot(Time,Emg2)    
+    subplot(nr,nc,4)
+    plot(Time,Emg3)    
+    subplot(nr,nc,5)
+    plot(Time,Emg4)    
+end
 
 % save into temporary directory
 writematrix(Participant, tmpDir + "Participant.csv");

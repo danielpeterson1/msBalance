@@ -25,15 +25,15 @@ end
 for t = 1:nR
     emgTime = in.time{t,:};
     emg1 = in.emg1{t,:};
-    emg2 = in.emg1{t,:};
-    emg3 = in.emg1{t,:};
-    emg4 = in.emg1{t,:};
+    emg2 = in.emg2{t,:};
+    emg3 = in.emg3{t,:};
+    emg4 = in.emg4{t,:};
     treadmillPosition = in.Treadmill_marker_position{t,:};
     treadmillTime = in.Treadmill_Marker_Time{t,:};
-%     onsetSample = identifyOnsetSample(treadmillPosition);
-%     onsetTime = treadmillTime(onsetSample);
+    
+    % use supplied onset time, round to nearest sample
     onsetSample = round(in.perturbationOnset(t));
-    onsetTime = in.time{t,onsetSample};
+    onsetTime = in.time{t}(onsetSample);
     
     % identify sample frequencies
     sampleFrequencyEmg = 1/(emgTime(2)-emgTime(1));
