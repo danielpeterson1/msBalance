@@ -30,8 +30,10 @@ for t = 1:nR
     emg4 = in.emg1{t,:};
     treadmillPosition = in.Treadmill_marker_position{t,:};
     treadmillTime = in.Treadmill_Marker_Time{t,:};
-    onsetSample = identifyOnsetSample(treadmillPosition);
-    onsetTime = treadmillTime(onsetSample);
+%     onsetSample = identifyOnsetSample(treadmillPosition);
+%     onsetTime = treadmillTime(onsetSample);
+    onsetSample = round(in.perturbationOnset(t));
+    onsetTime = in.time{t,onsetSample};
     
     % identify sample frequencies
     sampleFrequencyEmg = 1/(emgTime(2)-emgTime(1));
