@@ -182,7 +182,7 @@ participants = participants %>% filter(Participant %in% includedParticipants)
 taR = taR %>% mutate(Group = factor(`Study Group`, levels = c("Control", "MS"))) %>% select(-`Study Group`) %>% 
   mutate(`Perturbation Direction` = factor(`Perturbation Direction`, levels = c("Forward", "Backward")))
 
-# calculate max activity for normalization purposes. this has already been filtered, etc. so it is probably ok just to normalize to maximum values.
+# calculate max activity for normalization purposes. this has already been filtered, etc. so it is probably ok just to normalize to maximum values. note that when we do this, it really appears to favor some narrow stuff. it's probably better to average over replicates of each direction before calculating maximum values.
 taRNorm = taR %>% group_by(Participant) %>% summarize(Vm = max(V, na.rm = TRUE)) %>% ungroup()
 taR = taR %>% left_join(taRNorm, by = "Participant") %>% mutate(Vn = V/Vm)
 
