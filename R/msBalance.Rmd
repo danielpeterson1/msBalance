@@ -71,7 +71,7 @@ participants %<>% filter(!`Visit ID` %contains% "F") %>% filter(!is.na(Age)) %>%
 
 # add a group condition - note that if_else in dplyr and ifelse in base r are different!
 participants %<>% mutate(Group = if_else(Participant %contains% "MSC", "Control", "MS")) %>%
-  mutate(Group = relevel(factor(Group), "MS")) %>% select(Group, Participant, Age, Sex, everything())
+  mutate(Group = relevel(factor(Group), "Control")) %>% select(Group, Participant, Age, Sex, everything())
 ```
 
 ```{r layout}
@@ -81,6 +81,7 @@ tableNumbers <- captioner(prefix = "Table")
 captionDemographics = tableNumbers(name = "demographics", caption = "Clinical and demographic features of the study population.")
 figureNumbers <- captioner(prefix = "Figure")
 captionCartoon = figureNumbers(name = "cartoon", caption = "Perturbation directions used in testing protocol.")
+captionRawEmg = figureNumbers(name = "rawEmg", caption = "EMG traces stratified by perturbation direction and study group.")
 ```
 
 ## Data sources
@@ -88,24 +89,27 @@ This study analyzed existing electromyographic recordings during balance respons
 An earlier analysis of a subset of these records is available.[@peterson2016]
 Inclusion criteria for MS participants were as follows: diagnosis of MS by a MS neurologist and no relapses within 60 days.
 Inclusion criteria for all participants included ability to walk 25 ft (7.6 m) without an assistive device, and no other known biomechanical or neurologic conditions affecting stepping or balance.
-Clinical and demographic characteristics of the study sample are summarized in `r tableNumbers("demographics", display = "cite")`.
 
 ## Assessment protocol
 Complete details of the assessment protocol are avaialble in an earlier report.[@huisinga2014] 
-Briefly, subjects stood on a set of 2 custom hydraulic force platforms that translated either forward or backward (`r figureNumbers("cartoon", display = "cite")`).
+During each asssessment, subjects stood with arms folded across the chest, eyes open, with their feet at a fixed heel-to-heel distance of 10 cm on a set of 2 custom hydraulic force platforms that translated either forward or backward (`r figureNumbers("cartoon", display = "cite")`).
 In this study, "perturbation direction" refers to the direction of postural sway caused by the surface translation.
 Therefore, a backward perturbation refers to forward movement of the support surface causing backward body sway and the activation of tibialis anterior (TA),
 whereas forward perturbations refer to backward translation of the support surface causing forward body sway and the activation of medial gastrocnemius (MG).
-
-During each asssessment, subjects stood with arms folded across the chest, eyes open, with their feet at a fixed heel-to-heel distance of 10 cm.
 Six perturbations were delivered, three forward, followed by three backward.
 Peak platform displacement was 4 cm, at a rate of 15 cm/s, which elicited feet-in-place balance corrections without stepping.
-Surface electromyography was recorded with pairs 2.5-cm^2^ surface electrodes placed approximately 2 cm apart, with a ground electrode on the lateral condyle. 
-For this preliminary analysis, we considered only the activity of tibialis anterior of the right leg during forward perturbations.
 
+## Electromyography
+Surface electromyography was recorded with pairs 2.5-cm^2^ surface electrodes placed approximately 2 cm apart, with a ground electrode on the lateral condyle. 
+The activity of tibialis anterior (TA) and medial gastrocnemius (MG) were recorded.
+For this analysis, we considered only the activity of tibialis anterior of the right leg.
+
+
+***
 ```{r perturbationFigure, out.width = "25%", fig.align = "left", fig.cap = captionCartoon}
 knitr::include_graphics("figures/Perturbations.svg")
 ```
+***
 
 ## Data processing
 Each individual EMG record was registered to the onset of treadmill motion and resampled to a common sample rate (1 kHz), and processed (high-pass, 35 Hz, de- mean, rectify, low-pass, 40 Hz) as in previous studies.[@lang2019; @mckay2016]
@@ -175,23 +179,46 @@ includedParticipants = intersect(taR$Participant, participants$Participant)
 taR = taR %>% filter(Participant %in% includedParticipants)
 participants = participants %>% filter(Participant %in% includedParticipants)
 
+taR = taR %>% mutate(Group = factor(`Study Group`, levels = c("Control", "MS"))) %>% select(-`Study Group`) %>% 
+  mutate(`Perturbation Direction` = factor(`Perturbation Direction`, levels = c("Forward", "Backward")))
+
+# calculate max activity for normalization purposes. this has already been filtered, etc. so it is probably ok just to normalize to maximum values.
+taRNorm = taR %>% group_by(Participant) %>% summarize(Vm = max(V, na.rm = TRUE)) %>% ungroup()
+taR = taR %>% left_join(taRNorm, by = "Participant") %>% mutate(Vn = V/Vm)
+
+
 ```
 
+# Results
+
+## Demographic and clinical characteristics
+Demographic and clinical characteristics of the study population are summarized in `r tableNumbers("demographics", display = "cite")`.
+
+***
 ```{r demographics}
 library(janitor)
 library(kableExtra)
 participants %>% tabyl(Sex, Group) %>% mutate(Total = MS + Control) %>% 
   kable(caption = captionDemographics) %>% kable_styling(full_width = F, position = "left")
 ```
+***
 
-```{r rawEmg}
+## Changes in tibialis anterior activity with disease state and perturbation direction
+Recorded EMG traces are presented in `r figureNumbers("rawEmg", display = "cite")`.
+
+***
+```{r rawEMG, out.width = "100%", fig.align = "left", fig.cap = captionRawEmg}
 library(ggplot2)
-p = ggplot(taR, aes(x = Time, y = V, group = Code)) + geom_line() + facet_grid(`Study Group` ~ `Perturbation Direction`)
+library(cowplot)
+p = ggplot(taR, aes(x = Time, y = Vn, group = Code)) + geom_line() + facet_grid(Group ~ `Perturbation Direction`) + theme_minimal_grid()
 p
 ```
+***
 
-## Demographic and clinical characteristics
-Demographic and clinical characteristics of the study population are summarized in `r tableNumbers("demographics", display = "cite")`.
+
+# Discussion
+
+TK
 
 ***
 ### Funding sources and conflict of interest
