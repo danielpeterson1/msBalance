@@ -59,7 +59,7 @@ participants = full_join( m %>% select(-trial, -age, -gender) %>% distinct(), c 
   mutate(Participant = str_replace(Participant, "F\\d", "")) %>% 
   mutate(Group = factor(Group, levels = c("MS","Control")))
 
-# identify enrollment date for each participant and calculate amount of observation time
+# identify enrollment date for each participant and calculate amount of time
 participants = participants %>% left_join(participants %>% group_by(Participant) %>% summarize(`Enrollment Date` = min(`Visit Date`, na.rm = TRUE))) %>% 
   mutate(`Time Since Enrollment (Days)` = ifelse(Group == "MS", `Visit Date` - `Enrollment Date`, 0))
 
@@ -89,13 +89,6 @@ An earlier analysis of a subset of these records is available.[@peterson2016]
 Inclusion criteria for MS participants were as follows: diagnosis of MS by a MS neurologist and no relapses within 60 days.
 Inclusion criteria for all participants included ability to walk 25 ft (7.6 m) without an assistive device, and no other known biomechanical or neurologic conditions affecting stepping or balance.
 Clinical and demographic characteristics of the study sample are summarized in `r tableNumbers("demographics", display = "cite")`.
-
-```{r demographics}
-library(janitor)
-library(kableExtra)
-participants %>% tabyl(Sex, Group) %>% mutate(Total = MS + Control) %>% 
-  kable(caption = captionDemographics) %>% kable_styling(full_width = F, position = "left")
-```
 
 ## Assessment protocol
 Complete details of the assessment protocol are avaialble in an earlier report.[@huisinga2014] 
@@ -130,13 +123,23 @@ if (!file.exists("../tmp/Participant.csv")|
     !file.exists("../tmp/Emg4.csv")){
   system(paste(matlabCommand, "'cd ../m; preprocessData; exit'"))
 }
-trialData = cbind(
-vroom("../tmp/Participant.csv", col_names = FALSE) %>% select(Participant = X1),
-vroom("../tmp/Date.csv", col_names = FALSE) %>% select(Date = X1),
-vroom("../tmp/Trial.csv", col_names = FALSE) %>% select(Trial = X1)
-) %>% as_tibble() %>% mutate(Date = ymd(Date))
 
-time = vroom("../tmp/Time.csv", col_names = FALSE)
+# code the trial-level information so that each is coded.
+# this call also codes the groups and isolates first visits based on the subject code.
+# finally, this code isolates the trial number and direction from the Trial code, _t1-_t6.
+trialData = cbind(
+  vroom("../tmp/Participant.csv", col_names = FALSE) %>% select(Participant = X1),
+  vroom("../tmp/Date.csv", col_names = FALSE) %>% select(Date = X1),
+  vroom("../tmp/Trial.csv", col_names = FALSE) %>% select(Trial = X1)
+) %>% as_tibble() %>%
+  mutate(Date = ymd(Date)) %>%
+  mutate(`Code` = paste0("X", row_number())) %>% 
+  mutate(`Study Group` = if_else(Participant %contains% "MSC", "Control", "MS")) %>% 
+  mutate(Visit = if_else(Participant %contains% "F", "Follow-up", "Initial")) %>% 
+  mutate(`Trial Number` = Trial %>% str_extract("_t\\d") %>% str_extract("\\d") %>% as.numeric()) %>% 
+  mutate(`Perturbation Direction` = if_else(`Trial Number` <= 3, "Forward", "Backward"))
+
+time = vroom("../tmp/Time.csv", col_names = FALSE) %>% select(Time = X1)
 treadmill = vroom("../tmp/Treadmill.csv", col_names = FALSE)
 emg1 = vroom("../tmp/Emg1.csv", col_names = FALSE)
 emg2 = vroom("../tmp/Emg2.csv", col_names = FALSE)
@@ -156,8 +159,35 @@ emg4 = vroom("../tmp/Emg4.csv", col_names = FALSE)
 # b.       Next 3 are BACKWARD steps / loss of balance (i.e. the treadmill belt moves forward underfoot)
 
 # the dataset emg1 corresponds to right TA. reconfigure it to enable tidy plotting.
+taR = time %>%  cbind(emg1) %>% as_tibble() %>% tidyr::pivot_longer(-Time, names_to = "Code", values_to = "V") %>%
+  mutate(Muscle = "Tibialis Anterior") %>% mutate(Side = "Right") %>% select(`Code`, Muscle, Side, everything())
 
+# I cannot figure out how to get dplyr::left_join to join by a variable with backticks, so rename temporarily
+taR = left_join(taR, trialData, by = "Code") %>% 
+  select(`Study Group`,Participant, Date, Trial, `Code`, `Trial Number`, `Perturbation Direction`, Muscle, Side, everything()) %>% 
+  arrange(`Study Group`, Participant, `Trial Number`, Time)
 
+# note that a large amount of the data (40%) is follow-up, with different visit amounts. for now, let's just consider the initial visit.
+taR = taR %>% filter(Visit == "Initial")
+
+# consider only those participants for whom both some EMG and minimal demographic data are available.
+includedParticipants = intersect(taR$Participant, participants$Participant)
+taR = taR %>% filter(Participant %in% includedParticipants)
+participants = participants %>% filter(Participant %in% includedParticipants)
+
+```
+
+```{r demographics}
+library(janitor)
+library(kableExtra)
+participants %>% tabyl(Sex, Group) %>% mutate(Total = MS + Control) %>% 
+  kable(caption = captionDemographics) %>% kable_styling(full_width = F, position = "left")
+```
+
+```{r rawEmg}
+library(ggplot2)
+p = ggplot(taR, aes(x = Time, y = V, group = Code)) + geom_line() + facet_grid(`Study Group` ~ `Perturbation Direction`)
+p
 ```
 
 ## Demographic and clinical characteristics
