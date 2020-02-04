@@ -88,7 +88,8 @@ captionDemographics = tableNumbers(name = "demographics", caption = "Clinical an
 
 figureNumbers <- captioner(prefix = "Figure")
 captionCartoon = figureNumbers(name = "cartoon", caption = "Perturbation directions used in testing protocol.")
-captionRawEmg = figureNumbers(name = "rawEmg", caption = "EMG traces stratified by perturbation direction and study group, prior to normalization. Colors represent individual participants.")
+captionRawEmg = figureNumbers(name = "rawEmg", caption = "EMG traces stratified by perturbation direction and study group, prior to normalization. Gray traces represent individual trials. Colors represent averages of individual participants.")
+captionNormedEmg = figureNumbers(name = "normedEmg", caption = "EMG traces stratified by perturbation direction and study group, after normalization. Colors represent averages for individual participants.")
 ```
 
 ## Data sources
@@ -203,23 +204,17 @@ taR %<>% mutate(Group = factor(`Study Group`, levels = c("Control", "MS"))) %>% 
 taRAv = taR %>% group_by(Group, Participant, Muscle, Side, `Perturbation Direction`, Time) %>% summarize(V = mean(V, na.rm = TRUE)) %>% ungroup()
 
 # to calculate normalization coefficients, average across like trials for each patient, limit to a particular normalization window, and calculate maximum values
-taRNorm = taRAv %>% filter(Time %between% c(0.0, 1.0)) %>% group_by(Group, Participant, `Perturbation Direction`) %>% summarize(Vm = max(V, na.rm = TRUE)) %>% ungroup()
+taRMax = taRAv %>% filter(Time %between% c(0.0, 1.0)) %>% group_by(Group, Participant, `Perturbation Direction`) %>% summarize(Vm = max(V, na.rm = TRUE)) %>% ungroup()
 ```
 
 ***
-```{r rawEMG, out.width = "100%", fig.align = "left", fig.cap = captionRawEmg}
-# p = ggplot(taR, aes(x = Time, y = V)) + geom_line(aes(color = Participant), show.legend = FALSE, alpha = 0.5) + facet_grid(Group ~ `Perturbation Direction`) + theme_minimal_grid() +
-#   geom_jitter(mapping = aes(x = 0, y = Vm, color = Participant), data = taRNorm %>% left_join(participants %>% select(Participant, Group)), show.legend = FALSE, height = 0, width = 0.01)
-# p
-# p = ggplot(taR, aes(x = Time, y = V)) + geom_line(aes(color = Participant), show.legend = FALSE, alpha = 0.5) + facet_grid(Group ~ `Perturbation Direction`) + theme_minimal_grid() +
-#   geom_label(mapping = aes(x = 0, y = Vm, color = Participant, label = Participant), data = taRNorm, show.legend = FALSE)
-# p
+```{r rawEMG, out.width = "75%", fig.align = "left", fig.cap = captionRawEmg}
 p = ggplot(taR, aes(x = Time, y = V)) +
   geom_line(color = "Gray90", show.legend = FALSE, alpha = 0.5) +
   geom_line(aes(color = Participant), taRAv, show.legend = FALSE, alpha = 0.5) +
   facet_grid(Group ~ `Perturbation Direction`) +
   theme_minimal_grid() +
-  geom_text(mapping = aes(x = 0, y = Vm, color = Participant, label = Participant), data = taRNorm %>% group_by(Group, `Perturbation Direction`) %>% top_n(3), show.legend = FALSE)
+  geom_text(mapping = aes(x = 0, y = Vm, color = Participant, label = Participant), data = taRMax %>% group_by(Group, `Perturbation Direction`) %>% top_n(3), show.legend = FALSE)
 p
 ```
 
@@ -230,26 +225,22 @@ EMG levels were therefore normalized to the maximum values obtained in a 1 secon
 
 ```{r emgMags}
 emgMags = 
-  taRNorm %>% group_by(`Perturbation Direction`, Group) %>% summarize(Mean = mean(Vm) %>% round() ) %>% left_join(
-    taRNorm %>% group_by(`Perturbation Direction`, Group) %>% summarize(SD = sd(Vm) %>% round() ) ) %>% left_join(
-      taRNorm %>% group_by(`Perturbation Direction`, Group) %>% summarize(Max = max(Vm) %>% round() ) )
+  taRMax %>% group_by(`Perturbation Direction`, Group) %>% summarize(Mean = mean(Vm) %>% round() ) %>% left_join(
+    taRMax %>% group_by(`Perturbation Direction`, Group) %>% summarize(SD = sd(Vm) %>% round() ) ) %>% left_join(
+      taRMax %>% group_by(`Perturbation Direction`, Group) %>% summarize(Max = max(Vm) %>% round() ) )
 emgMags %>% kable(caption = captionEmgMags) %>% kable_styling(full_width = F, position = "left")
-
-# 
-# 
-# ggplot(taRAv, aes(Time, Vn, color = Participant)) + geom_point(show.legend = FALSE) + facet_wrap(vars(`Perturbation Direction`))
-# 
-# p = ggplot(taRAv, aes(Time, Vn)) + geom_point()
-# 
-# p = ggplot(taRAv %>% group_by(Participant, `Perturbation Direction`), aes(x = Time, y = Vn, color = Participant)) +
-#   facet_grid(Group ~ `Perturbation Direction`) +
-#   theme_minimal_grid() +
-#   coord_cartesian(xlim = c(0,1)) + 
-#   geom_line(aes(group = Participant, color = Participant), taRav, show.legend = FALSE) +
-# p
 ```
 
-***
+```{r normedEMG, out.width = "75%", fig.align = "left", fig.cap = captionNormedEmg}
+p = ggplot(taR, aes(x = Time, y = V)) +
+  geom_line(color = "Gray90", show.legend = FALSE, alpha = 0.5) +
+  geom_line(aes(color = Participant), taRAv, show.legend = FALSE, alpha = 0.5) +
+  facet_grid(Group ~ `Perturbation Direction`) +
+  theme_minimal_grid() +
+  geom_text(mapping = aes(x = 0, y = Vm, color = Participant, label = Participant), data = taRMax %>% group_by(Group, `Perturbation Direction`) %>% top_n(3), show.legend = FALSE)
+p
+```
+
 
 # Results
 
