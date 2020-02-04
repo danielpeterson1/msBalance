@@ -43,8 +43,13 @@ library(dplyr)
 library(magrittr)
 library(stringr)
 library(lubridate)
+library(janitor)
+library(kableExtra)
+library(ggplot2)
+library(cowplot)
 `%contains%` = function(s, pattern) grepl(pattern, s)
 `%omits%` = function(s, pattern) !grepl(pattern, s)
+`%between%` = function(s, window) s>=min(window)&s<max(window)
 
 # load participant-level information
 m = vroom("../tmp/m.csv") %>% mutate(Group = "MS") %>% mutate(Age = round(age)) %>% mutate(Sex = toupper(gender)) %>% rename(Participant = Subj)
@@ -78,10 +83,12 @@ participants %<>% mutate(Group = if_else(Participant %contains% "MSC", "Control"
 # layout tables and figures
 library(captioner)
 tableNumbers <- captioner(prefix = "Table")
+captionEmgMags = tableNumbers(name = "emgMags", caption = "Maximum EMG levels.")
 captionDemographics = tableNumbers(name = "demographics", caption = "Clinical and demographic features of the study population.")
+
 figureNumbers <- captioner(prefix = "Figure")
 captionCartoon = figureNumbers(name = "cartoon", caption = "Perturbation directions used in testing protocol.")
-captionRawEmg = figureNumbers(name = "rawEmg", caption = "EMG traces stratified by perturbation direction and study group.")
+captionRawEmg = figureNumbers(name = "rawEmg", caption = "EMG traces stratified by perturbation direction and study group, prior to normalization. Colors represent individual participants.")
 ```
 
 ## Data sources
@@ -113,6 +120,9 @@ knitr::include_graphics("figures/Perturbations.svg")
 
 ## Data processing
 Each individual EMG record was registered to the onset of treadmill motion and resampled to a common sample rate (1 kHz), and processed (high-pass, 35 Hz, de- mean, rectify, low-pass, 40 Hz) as in previous studies.[@lang2019; @mckay2016]
+Recorded EMG records were visualized stratified by disease state and perturbation direction (`r figureNumbers("rawEmg", display = "cite")`).
+By visual inspection, there were some gross magnitude differences in recorded EMG levels between the MS and control groups, with higher EMG levels overall in the MS group.
+EMG levels were therefore normalized to the maximum values obtained in a 1 second window after perturbation onset after averaging across like trials (`r tableNumbers("emgMags", display = "cite")`).
 
 ```{r}
 # if trial-level data files do not exist, run matlab batch steps to populate them
@@ -162,32 +172,71 @@ emg4 = vroom("../tmp/Emg4.csv", col_names = FALSE)
 # a.       First 3 are FORWARD steps / loss of balance (i.e. the treadmill belt moves backward underfoot)
 # b.       Next 3 are BACKWARD steps / loss of balance (i.e. the treadmill belt moves forward underfoot)
 
+
 # the dataset emg1 corresponds to right TA. reconfigure it to enable tidy plotting.
-taR = time %>%  cbind(emg1) %>% as_tibble() %>% tidyr::pivot_longer(-Time, names_to = "Code", values_to = "V") %>%
+taR = time %>% cbind(emg1) %>% as_tibble() %>% tidyr::pivot_longer(-Time, names_to = "Code", values_to = "V") %>%
   mutate(Muscle = "Tibialis Anterior") %>% mutate(Side = "Right") %>% select(`Code`, Muscle, Side, everything())
 
 # I cannot figure out how to get dplyr::left_join to join by a variable with backticks, so rename temporarily
-taR = left_join(taR, trialData, by = "Code") %>% 
+taR %<>% left_join(trialData, by = "Code") %>% 
   select(`Study Group`,Participant, Date, Trial, `Code`, `Trial Number`, `Perturbation Direction`, Muscle, Side, everything()) %>% 
   arrange(`Study Group`, Participant, `Trial Number`, Time)
 
 # note that a large amount of the data (40%) is follow-up, with different visit amounts. for now, let's just consider the initial visit.
-taR = taR %>% filter(Visit == "Initial")
+taR %<>% filter(Visit == "Initial")
 
 # consider only those participants for whom both some EMG and minimal demographic data are available.
 includedParticipants = intersect(taR$Participant, participants$Participant)
-taR = taR %>% filter(Participant %in% includedParticipants)
-participants = participants %>% filter(Participant %in% includedParticipants)
 
-taR = taR %>% mutate(Group = factor(`Study Group`, levels = c("Control", "MS"))) %>% select(-`Study Group`) %>% 
+# consider only a subset of participants if debugging
+SP = FALSE
+if (SP){
+  includedParticipants = sample(includedParticipants, 60)
+}
+
+taR %<>% filter(Participant %in% includedParticipants)
+participants %<>% filter(Participant %in% includedParticipants)
+
+# here are the time records
+taR %<>% mutate(Group = factor(`Study Group`, levels = c("Control", "MS"))) %>% select(-`Study Group`) %>% 
   mutate(`Perturbation Direction` = factor(`Perturbation Direction`, levels = c("Forward", "Backward")))
 
-# calculate max activity for normalization purposes. this has already been filtered, etc. so it is probably ok just to normalize to maximum values. note that when we do this, it really appears to favor some narrow stuff. it's probably better to average over replicates of each direction before calculating maximum values.
-taRNorm = taR %>% group_by(Participant) %>% summarize(Vm = max(V, na.rm = TRUE)) %>% ungroup()
-taR = taR %>% left_join(taRNorm, by = "Participant") %>% mutate(Vn = V/Vm)
+# here are the averages across like trials
+taRAv = taR %>% group_by(Group, Participant, Muscle, Side, `Perturbation Direction`, Time) %>% summarize(V = mean(V, na.rm = TRUE)) %>% ungroup()
 
-
+# to calculate normalization coefficients, average across like trials for each patient, limit to a particular normalization window, and calculate maximum values
+taRNorm = taRAv %>% filter(Time %between% c(0.0, 1.0)) %>% group_by(Group, Participant, `Perturbation Direction`) %>% summarize(Vm = max(V, na.rm = TRUE)) %>% ungroup()
 ```
+
+***
+```{r rawEMG, out.width = "100%", fig.align = "left", fig.cap = captionRawEmg}
+p = ggplot(taR, aes(x = Time, y = V)) + geom_line(aes(color = Participant), show.legend = FALSE, alpha = 0.5) + facet_grid(Group ~ `Perturbation Direction`) + theme_minimal_grid() +
+  geom_jitter(mapping = aes(x = 0, y = Vm, color = Participant), data = taRNorm %>% left_join(participants %>% select(Participant, Group)), show.legend = FALSE, height = 0, width = 0.01)
+p
+```
+
+```{r emgMags}
+emgMags = 
+  taRNorm %>% group_by(`Perturbation Direction`, Group) %>% summarize(Mean = mean(Vm) %>% round() ) %>% left_join(
+    taRNorm %>% group_by(`Perturbation Direction`, Group) %>% summarize(SD = sd(Vm) %>% round() ) ) %>% left_join(
+      taRNorm %>% group_by(`Perturbation Direction`, Group) %>% summarize(Max = max(Vm) %>% round() ) )
+emgMags %>% kable(caption = captionEmgMags) %>% kable_styling(full_width = F, position = "left")
+
+# 
+# 
+# ggplot(taRAv, aes(Time, Vn, color = Participant)) + geom_point(show.legend = FALSE) + facet_wrap(vars(`Perturbation Direction`))
+# 
+# p = ggplot(taRAv, aes(Time, Vn)) + geom_point()
+# 
+# p = ggplot(taRAv %>% group_by(Participant, `Perturbation Direction`), aes(x = Time, y = Vn, color = Participant)) +
+#   facet_grid(Group ~ `Perturbation Direction`) +
+#   theme_minimal_grid() +
+#   coord_cartesian(xlim = c(0,1)) + 
+#   geom_line(aes(group = Participant, color = Participant), taRav, show.legend = FALSE) +
+# p
+```
+
+***
 
 # Results
 
@@ -196,24 +245,12 @@ Demographic and clinical characteristics of the study population are summarized 
 
 ***
 ```{r demographics}
-library(janitor)
-library(kableExtra)
 participants %>% tabyl(Sex, Group) %>% mutate(Total = MS + Control) %>% 
   kable(caption = captionDemographics) %>% kable_styling(full_width = F, position = "left")
 ```
 ***
 
 ## Changes in tibialis anterior activity with disease state and perturbation direction
-Recorded EMG traces are presented in `r figureNumbers("rawEmg", display = "cite")`.
-
-***
-```{r rawEMG, out.width = "100%", fig.align = "left", fig.cap = captionRawEmg}
-library(ggplot2)
-library(cowplot)
-p = ggplot(taR, aes(x = Time, y = Vn, group = Code)) + geom_line() + facet_grid(Group ~ `Perturbation Direction`) + theme_minimal_grid()
-p
-```
-***
 
 
 # Discussion
