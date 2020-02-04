@@ -210,8 +210,11 @@ taRNorm = taRAv %>% filter(Time %between% c(0.0, 1.0)) %>% group_by(Group, Parti
 
 ***
 ```{r rawEMG, out.width = "100%", fig.align = "left", fig.cap = captionRawEmg}
+# p = ggplot(taR, aes(x = Time, y = V)) + geom_line(aes(color = Participant), show.legend = FALSE, alpha = 0.5) + facet_grid(Group ~ `Perturbation Direction`) + theme_minimal_grid() +
+#   geom_jitter(mapping = aes(x = 0, y = Vm, color = Participant), data = taRNorm %>% left_join(participants %>% select(Participant, Group)), show.legend = FALSE, height = 0, width = 0.01)
+# p
 p = ggplot(taR, aes(x = Time, y = V)) + geom_line(aes(color = Participant), show.legend = FALSE, alpha = 0.5) + facet_grid(Group ~ `Perturbation Direction`) + theme_minimal_grid() +
-  geom_jitter(mapping = aes(x = 0, y = Vm, color = Participant), data = taRNorm %>% left_join(participants %>% select(Participant, Group)), show.legend = FALSE, height = 0, width = 0.01)
+  geom_label(mapping = aes(x = 0, y = Vm, color = Participant, label = Participant), data = taRNorm, show.legend = FALSE)
 p
 ```
 
