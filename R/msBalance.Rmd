@@ -205,6 +205,13 @@ taRAv = taR %>% group_by(Group, Participant, Muscle, Side, `Perturbation Directi
 
 # to calculate normalization coefficients, average across like trials for each patient, limit to a particular normalization window, and calculate maximum values
 taRMax = taRAv %>% filter(Time %between% c(0.0, 1.0)) %>% group_by(Group, Participant, `Perturbation Direction`) %>% summarize(Vm = max(V, na.rm = TRUE)) %>% ungroup()
+
+# take the maximum observed in either the forward or backward directions.
+taRMaxMax = taRMax %>% group_by(Participant) %>% summarize(Vm = max(Vm))
+
+# append normed EMG to existing EMG
+taR %<>% left_join(taRMaxMax, by = "Participant") %>% mutate(Vn = V / Vm)
+taRAv %<>% left_join(taRMaxMax, by = "Participant") %>% mutate(Vn = V / Vm)
 ```
 
 ***
@@ -232,12 +239,12 @@ emgMags %>% kable(caption = captionEmgMags) %>% kable_styling(full_width = F, po
 ```
 
 ```{r normedEMG, out.width = "75%", fig.align = "left", fig.cap = captionNormedEmg}
-p = ggplot(taR, aes(x = Time, y = V)) +
+p = ggplot(taR, aes(x = Time, y = Vn)) +
   geom_line(color = "Gray90", show.legend = FALSE, alpha = 0.5) +
   geom_line(aes(color = Participant), taRAv, show.legend = FALSE, alpha = 0.5) +
   facet_grid(Group ~ `Perturbation Direction`) +
   theme_minimal_grid() +
-  geom_text(mapping = aes(x = 0, y = Vm, color = Participant, label = Participant), data = taRMax %>% group_by(Group, `Perturbation Direction`) %>% top_n(3), show.legend = FALSE)
+  coord_cartesian(ylim = c(0,2))
 p
 ```
 
