@@ -121,8 +121,6 @@ knitr::include_graphics("figures/Perturbations.svg")
 ## Data processing
 Each individual EMG record was registered to the onset of treadmill motion and resampled to a common sample rate (1 kHz), and processed (high-pass, 35 Hz, de- mean, rectify, low-pass, 40 Hz) as in previous studies.[@lang2019; @mckay2016]
 Recorded EMG records were visualized stratified by disease state and perturbation direction (`r figureNumbers("rawEmg", display = "cite")`).
-By visual inspection, there were some gross magnitude differences in recorded EMG levels between the MS and control groups, with higher EMG levels overall in the MS group.
-EMG levels were therefore normalized to the maximum values obtained in a 1 second window after perturbation onset after averaging across like trials (`r tableNumbers("emgMags", display = "cite")`).
 
 ```{r}
 # if trial-level data files do not exist, run matlab batch steps to populate them
@@ -213,10 +211,22 @@ taRNorm = taRAv %>% filter(Time %between% c(0.0, 1.0)) %>% group_by(Group, Parti
 # p = ggplot(taR, aes(x = Time, y = V)) + geom_line(aes(color = Participant), show.legend = FALSE, alpha = 0.5) + facet_grid(Group ~ `Perturbation Direction`) + theme_minimal_grid() +
 #   geom_jitter(mapping = aes(x = 0, y = Vm, color = Participant), data = taRNorm %>% left_join(participants %>% select(Participant, Group)), show.legend = FALSE, height = 0, width = 0.01)
 # p
-p = ggplot(taR, aes(x = Time, y = V)) + geom_line(aes(color = Participant), show.legend = FALSE, alpha = 0.5) + facet_grid(Group ~ `Perturbation Direction`) + theme_minimal_grid() +
-  geom_label(mapping = aes(x = 0, y = Vm, color = Participant, label = Participant), data = taRNorm, show.legend = FALSE)
+# p = ggplot(taR, aes(x = Time, y = V)) + geom_line(aes(color = Participant), show.legend = FALSE, alpha = 0.5) + facet_grid(Group ~ `Perturbation Direction`) + theme_minimal_grid() +
+#   geom_label(mapping = aes(x = 0, y = Vm, color = Participant, label = Participant), data = taRNorm, show.legend = FALSE)
+# p
+p = ggplot(taR, aes(x = Time, y = V)) +
+  geom_line(color = "Gray90", show.legend = FALSE, alpha = 0.5) +
+  geom_line(aes(color = Participant), taRAv, show.legend = FALSE, alpha = 0.5) +
+  facet_grid(Group ~ `Perturbation Direction`) +
+  theme_minimal_grid() +
+  geom_text(mapping = aes(x = 0, y = Vm, color = Participant, label = Participant), data = taRNorm %>% group_by(Group, `Perturbation Direction`) %>% top_n(3), show.legend = FALSE)
 p
 ```
+
+By visual inspection, there were some gross magnitude differences in recorded EMG levels between the MS and control groups, with higher EMG levels overall in the MS group.
+EMG levels in most control participants (with the exception of MSC15 and MSC18) were generally roughly an order of magnitude lower than levels in MS participants.
+This number is difficult to interpret, as it can reflect a large number of biological and methodological factors, so that increased absolute level among MS could reflect increased muscle activation or completely unrelated factors.
+EMG levels were therefore normalized to the maximum values obtained in a 1 second window after perturbation onset after averaging across like trials (`r tableNumbers("emgMags", display = "cite")`).
 
 ```{r emgMags}
 emgMags = 
