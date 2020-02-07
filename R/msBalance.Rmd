@@ -34,6 +34,13 @@ This document describes the analysis of standing balance responses in people wit
 MS has profound effects on balance,[@vanliew2019] including altering protective stepping behaviors.[@peterson2016]
 The main objective of this study was to examine the impact of MS on the pattern of magnitude and timing of muscle activation during feet-in-place balance responses.
 
+## Subheading
+
+This is some markdown text.
+1. Bulleted lists are easy.
+1. For real.
+
+
 # Methods
 
 
