@@ -34,6 +34,12 @@ This document describes the analysis of standing balance responses in people wit
 MS has profound effects on balance,[@vanliew2019] including altering protective stepping behaviors.[@peterson2016]
 The main objective of this study was to examine the impact of MS on the pattern of magnitude and timing of muscle activation during feet-in-place balance responses.
 
+Previous work suggests that people with MS may exibit delays in the release of reactive postural control movements (Cameron 2008, Huisinga 2014, Peterson 2015, etc.). However, little work has established the degree to which other aspects of the postural response are or are not impacted in people with MS. For example, in seminal but small-sample (6 MS participants) early work, Cameron et al. 2008 showed that people with MS exhibited larger postural responses (measured via torque underfoot) compared to neurotypical adults. They suggested that this may have been an effort to compensate for the delayed response onset. While these data provide a glimpse into the impacts of MS on automatic postural responses, additional work is necessary to understand how MS impacts the timing, amplitude, and length of automatic postural responses. Further, characterizing both agonists and antagonist activity can interrogate potential coactivation of postural repsonse muscles during a loss of balance. indeed, We (McKay) have observed increased coactivation in other neurogical populations in this circumstance. 
+
+[Backward losses of balance can be particularly difficult and injurious in neurological populations (Horak & Dimitrova 2004, Carpenter). Interestingly, recent work has suggested that these two movements may rely on slightly different neural structures (Nonnekes et al. 2013; Neuroscience). Although considerably more work is necessary to establish this hypothesis, it does underscore the importance of assessing both forward and backward reactive postural control, especially in neurological populations.]
+
+Therefore, the goal of this project is to characterize muscular responses to an external perturbation in a large sample of MS participants. Based on previous results, we hypothesize that agonist EMG activation will be delayed and larger in peopel with MS compared to neurotypical peers. [Further, we expect increased activity of antagonists. We expect these deficits to 1) be related to retrospective and pro(ish)-spective fall history. Finally, we expect these deficits to become more pronounced over the 18 month observation period.]
+
 ## Subheading
 
 This is some markdown text.
@@ -107,17 +113,21 @@ Inclusion criteria for all participants included ability to walk 25 ft (7.6 m) w
 
 ## Assessment protocol
 Complete details of the assessment protocol are avaialble in an earlier report.[@huisinga2014] 
-During each asssessment, subjects stood with arms folded across the chest, eyes open, with their feet at a fixed heel-to-heel distance of 10 cm on a set of 2 custom hydraulic force platforms that translated either forward or backward (`r figureNumbers("cartoon", display = "cite")`).
+Participant demographics (age, year of diagnosis, medications) as well as  clinical and balance assessments (EDSS, Berg Balance scale, Timed Up and Go, 25ft walk test) were completed. Retrospective falls over the 6 months prior to study entry was also queried. Participants were then completed a reactive balance assessment. Subjects stood with arms folded across the chest, eyes open, with their feet at a fixed heel-to-heel distance of 10 cm on a set of 2 custom hydraulic force platforms that translated either forward or backward (`r figureNumbers("cartoon", display = "cite")`).
 In this study, "perturbation direction" refers to the direction of postural sway caused by the surface translation.
 Therefore, a backward perturbation refers to forward movement of the support surface causing backward body sway and the activation of tibialis anterior (TA),
 whereas forward perturbations refer to backward translation of the support surface causing forward body sway and the activation of medial gastrocnemius (MG).
 Six perturbations were delivered, three forward, followed by three backward.
-Peak platform displacement was 4 cm, at a rate of 15 cm/s, which elicited feet-in-place balance corrections without stepping.
+Peak platform displacement was 4 cm, at a rate of 15 cm/s, which elicited feet-in-place balance corrections without stepping. 
 
-## Electromyography
+[Participants completed 4 visits to the laboratory, each separated by approximately 6 months. Reactive stepping assessments were completed at each timepoint (Notably, there was very high attrition, that will be discussed in the results.))]
+
+## Data collection
 Surface electromyography was recorded with pairs 2.5-cm^2^ surface electrodes placed approximately 2 cm apart, with a ground electrode on the lateral condyle. 
 The activity of tibialis anterior (TA) and medial gastrocnemius (MG) were recorded.
 For this analysis, we considered only the activity of tibialis anterior of the right leg.
+
+A reflective marker (tracked by Motion Analysis Corp cameras) was also placed on the treadmill belt to capture support surface movement and for calculation of perturbation onset. 
 
 
 ***
